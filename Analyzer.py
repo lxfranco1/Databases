@@ -2,6 +2,8 @@ import os
 import twitter
 import tweepy as tw
 import pandas as pd
+import urllib
+import re
 
 #api = twitter.Api(consumer_key='TEQxvBQ2BVUAt0OnoAMIA0yWh',
 #                  consumer_secret='8YbxHRXnVTzKYPs8Qg4mzd7oD9DFAvbwDfVxdhmljeOlFuSP5j',
@@ -50,3 +52,5 @@ url = url.split('/')[-1]
 tweet = api.get_status(url)
 print("The Number of Retweets is: " + str(tweet.retweet_count))
 print("The Number of likes is: " + str(tweet.favorite_count))
+
+print(api.retweeters(url))

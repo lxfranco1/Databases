@@ -53,4 +53,7 @@ tweet = api.get_status(url)
 print("The Number of Retweets is: " + str(tweet.retweet_count))
 print("The Number of likes is: " + str(tweet.favorite_count))
 
-print(api.retweeters(url))
+#retweeters_list = api.retweeters(url))
+
+for id in api.retweeters(url):
+    print (api.get_user(id).screen_name)

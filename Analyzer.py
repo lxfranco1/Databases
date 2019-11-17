@@ -34,6 +34,19 @@ for tweet in tweets:
 '''
 
 #goes to my timeline and prints out the tweets on my timeline
+'''
 public_tweets = api.home_timeline()
 for tweet in public_tweets:
     print(tweet.text)
+'''
+
+# gets the url from the user
+url = input ("Enter a tweet URL: ")
+
+#extrats the tweet_id
+url = url.split('/')[-1]
+
+# gets the avaliable information from the tweet
+tweet = api.get_status(url)
+print("The Number of Retweets is: " + str(tweet.retweet_count))
+print("The Number of likes is: " + str(tweet.favorite_count))

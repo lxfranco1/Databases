@@ -1,27 +1,52 @@
 import MySQLdb
 import tweepy as tw
 
-class TwitterInfluence:
-    def __init__(self, url):
+class TwitterInfluence(object):
+    def __init__(self):
         self.dbConn = MySQLdb.connect(host='localhost', user='twitter_project', passwd='tw33t!123')
         self.dbCursor = self.dbConn.cursor()
         self.dbCursor.execute('use twitterinfluence')
 
-    def insert_into_database( self, url ):
-        print("insert")
-        # dbConn = MySQLdb.connect(host='localhost', user='twitter_project', passwd='tw33t!123')
-        # dbCursor = dbConn.cursor()
+    def insert_user(self, username, name):
+        print("insert user")
+        sql = "INSERT INTO user (username, name) VALUES (%s, %s)"
+        vals = (username, name)
 
-#dbCursor.execute('create database twitterinfluence')
-        # dbCursor.execute('use twitterinfluence')
+        self.dbCursor.execute(sql, vals)
+        self.dbConn.commit()
 
-#Create tables
-# user_table = 'create table user(username char(15) primary key, name char(50))'
-# dbCursor.execute(user_table)
+    def insert_tweet( self, url, date, likes, location, username, replies):
+        print("insert tweet")
+        sql = "INSERT INTO tweet (oc_url, oc_date, oc_likes, oc_location, oc_username, oc_replies) VALUES (%s, %s, %s, %s, %s, %s)"
+        vals = (url, date, likes, location, username, replies)
 
-# tweet_table = 'create table tweet(oc_url char(1000) primary key, oc_date DATE, oc_likes int(15), oc_location char(50)'
-# dbCursor.execute(tweet_table)
-#
-# retweet_table = 'create table retweet(re_url char(1000) primary key, re_date DATE, re_likes int(15), re_location char(50)'
-# dbCursor.execute(retweet_table)
+        self.dbCursor.execute(sql, vals)
 
+        self.dbConn.commit()
+
+    def insert_retweet(self, url, date, likes, location, username):
+        print("insert retweet")
+        sql = "INSERT INTO retweet (re_url, re_date, re_likes, re_location, re_username) VALUES (%s, %s, %s, %s, %s)"
+        vals = (url, date, likes, location, username)
+        self.dbCursor.execute(sql, vals)
+
+        self.dbConn.commit()
+
+    def insert_isa(self, re_url, oc_url):
+        print("insert isa")
+        sql = "INSERT INTO isa (isa_oc_url, isa_re_url) VALUES (%s, %s)"
+        vals = (oc_url, re_url)
+
+        self.dbCursor.execute(sql, vals)
+
+        self.dbConn.commit()
+
+    def insert_posts(self, username, url):
+        print("insert posts")
+
+        sql = "INSERT INTO posts (posts_oc_url, posts_username) VALUES (%s, %s)"
+        vals = (url, username)
+
+        self.dbCursor.execute(sql, vals)
+
+        self.dbConn.commit()

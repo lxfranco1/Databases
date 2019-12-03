@@ -1,11 +1,13 @@
 import os
 import twitter
 import tweepy as tw
-import pandas as pd
+from TwitterInfluence import *
+import datetime
 import urllib
 import re
+import twarc
 
-def Analyze():
+def Analyze(url):
     consumer_key='TEQxvBQ2BVUAt0OnoAMIA0yWh'
     consumer_secret='8YbxHRXnVTzKYPs8Qg4mzd7oD9DFAvbwDfVxdhmljeOlFuSP5j'
     access_token='2173222812-UpKnOtwJI2TEd29ubii368C9mzE0KZOYw2qUz4y'
@@ -38,20 +40,48 @@ def Analyze():
         print(tweet.text)
     '''
 
-# gets the url from the user
-    url = input ("Enter a tweet URL: ")
-
-#extrats the tweet_id
+    #extracts the tweet_id
     url = url.split('/')[-1]
 
-# gets the avaliable information from the tweet
+    # gets the avaliable information from the tweet
     tweet = api.get_status(url)
-    print("The Number of Retweets is: " + str(tweet.retweet_count))
+
+    print("Tweet url:" + url)
+    print("Posted by: " + str(tweet.user.screen_name) +" " + str(tweet.user.name))
+    print("Date posted: " + str(tweet.created_at) )
     print("The Number of likes is: " + str(tweet.favorite_count))
+    print("Posted in: " + str(tweet.user.location))
+
+
+    scr= str(tweet.user.screen_name)
+    # get number of likes retweets and replies
+    replies = []
+    for t in tw.Cursor(api.search, q='to:'+scr, result_type='recent', timeout=999999).items(1000):
+        if hasattr(t, 'in_reply_to_status_id_str'):
+            if (t.in_reply_to_status_id_str == url):
+                print("Here")
+                replies.append(t)
+
+    print("Num replies: " + str(len(replies)))
+    num = len(replies)
+    #print(replies[0].user.screen_name)
+
+    ti = TwitterInfluence()
+
+    ti.insert_user(str(tweet.user.screen_name), str(tweet.user.name))
+    ti.insert_tweet(url, tweet.created_at, tweet.favorite_count, tweet.user.location, tweet.user.screen_name, num)
+    ti.insert_posts(tweet.user.screen_name, str(url))
+
+    for usr in replies:
+        ti.insert_retweet(str(url), tweet.created_at, tweet.favorite_count, tweet.user.location, usr.user.screen_name)
+
+    # Problem with isa table
+        #!!!!! All retweets have same tweet id
+
+
+
 
 #retweeters_list = api.retweeters(url))
 
 #for id in api.retweeters(url):
 #    print (api.get_user(id).screen_name)
-
-Analyze()

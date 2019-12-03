@@ -50,6 +50,7 @@ def Analyze(url):
     print("Posted by: " + str(tweet.user.screen_name) +" " + str(tweet.user.name))
     print("Date posted: " + str(tweet.created_at) )
     print("The Number of likes is: " + str(tweet.favorite_count))
+    print("The Number of retweets is: " + str(tweet.retweet_count))
     print("Posted in: " + str(tweet.user.location))
 
 
@@ -63,6 +64,32 @@ def Analyze(url):
                 replies.append(t)
 
     print("Num replies: " + str(len(replies)))
+
+    print("For user: " + str(tweet.user.screen_name))
+    print("Lifetime tweets: " + str(tweet.user.statuses_count))
+
+    # Amount of likes for all of user's tweets
+    numRetweets=0
+    for i in tweet.GetUserTimeline(tweet.user.screen_name):
+        numRetweets += i.retweet_count
+
+    # Amount of likes for all of user's tweets
+    numLikes=0
+    for i in tweet.GetUserTimeline(tweet.user.screen_name):
+        numLikes += i.favorite_count
+
+    numReplies = 0
+    for t in tw.Cursor(api.search, q='to:'+scr, result_type='recent', timeout=999999).items(1000):
+        if hasattr(t, 'in_reply_to_status_id_str'):
+            if (t.in_reply_to_status_id_str == url):
+                numReplies += 1
+
+
+
+    print("Lifetime likes: " + str(numLikes))
+    print("Lifetime retweets: " + str(numRetweets))
+    print("Lifetime comments: " + str(numReplies))
+
     num = len(replies)
     #print(replies[0].user.screen_name)
 

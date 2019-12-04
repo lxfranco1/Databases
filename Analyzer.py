@@ -1,11 +1,9 @@
 import os
-import twitter
 import tweepy as tw
 from TwitterInfluence import *
 import datetime
 import urllib
 import re
-import twarc
 
 def Analyze(url):
     consumer_key='TEQxvBQ2BVUAt0OnoAMIA0yWh'

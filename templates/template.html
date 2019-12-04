@@ -7,20 +7,35 @@
     	    <link rel="stylesheet" href="{{ url_for('static', filename='template.css') }}"/>
 
 </head>
+
   <style>
-                body {
+                body,html {
+                    margin:0;
                     background-image: url(static/images/back.jpeg);
-                    background-size: 150%;
+                    background-size: 250%;
+                    height:100%
                     background-repeat: no-repeat;
                     line-height: 50px;
                 }
+                p.ex1 {
+  padding-left: 10%;
+}
+ h1.ex2 {
+  padding-left: 50%;
+    padding-top:5%;
+
+}
             </style>
   <body>
     <header>
                      <div class="navbar">
 
                          <a href="{{ url_for('home') }}"><font color="white">Home</font></a>
-  <a href="{{ url_for('about') }}"><font color="white">About</font></a>
+                        <a href="{{ url_for('about') }}"><font color="white">About</font></a>
+                         <a href="{{ url_for('output') }}"><font color="white">Results</font></a>
+
+                         <a href="{{ url_for('input') }}"><font color="white">Analyzer</font></a>
+
                      </div>
     </header>
 {% block content %}

@@ -8,9 +8,13 @@ app.debug=True
 def home():
     return render_template("home.html")
 
-@app.route("/about")
+@app.route("/team")
 def about():
     return render_template("about.html")
+
+@app.route("/output")
+def output():
+    return render_template("output.html")
 
 @app.route("/input", methods=['POST', 'GET'])
 def input():

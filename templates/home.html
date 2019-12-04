@@ -2,15 +2,31 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Flask Tutorial</title>
+    <title>Twitter Analyzer</title>
   </head>
   <body>
     {% extends "template.html" %}
     {% block content %}
     <div class="spacer">
 
-    <h1> My First Try Using Flask </h1>
-    <p> Flask is Fun </p>
+      <h1 class="ex2"><font size="+7">Twitter Analyzer</font></h1>
+      <p><br></p>
+      <p class="ex1"style="text-decoration: underline;"><font size="+2">What is the Twitter Analyzer?</font></p>
+        <p class="ex1">Twitter is widely known as a system for users to express public opinion, and can somewhat reflect the general
+          <br>
+      standing of a topic if analyzed thoroughly.
+        The Twitter Analyzer seeks to analyze this user data and express the exact level of <br>influence and
+       scope of spread a tweet has attained in ways that remain
+        quite unclear when observed through normal channels</p>
+
+      <p><br></p>
+      <p class="ex1" style="text-decoration: underline;"><font size="+2">What are it's applications?</font></p>
+      <p class="ex1">A big question regarding information spreading across twitter is just how far the influence of this
+      information has travelled. For example, <br>many politicians question how far campaign messages travel, and whom they travel to. The twitter
+        analyzer will break down this<br>information, albeit on a smaller scale, and break down the information, store it to a database, and
+      readily query the information for the users viewing pleasure.</p>
+
+
     </div>
     {% endblock %}
   </body>

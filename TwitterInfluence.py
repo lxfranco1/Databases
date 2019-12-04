@@ -24,18 +24,18 @@ class TwitterInfluence(object):
 
         self.dbConn.commit()
 
-    def insert_retweet(self, url, date, likes, location, username):
+    def insert_retweet(self, url, date, likes, location, username, replies):
         print("insert retweet")
-        sql = "INSERT INTO retweet (re_url, re_date, re_likes, re_location, re_username) VALUES (%s, %s, %s, %s, %s)"
-        vals = (url, date, likes, location, username)
+        sql = "INSERT INTO retweet (re_url, re_date, re_likes, re_location, re_username, re_replies) VALUES (%s, %s, %s, %s, %s, %s)"
+        vals = (url, date, likes, location, username, replies)
         self.dbCursor.execute(sql, vals)
 
         self.dbConn.commit()
 
-    def insert_isa(self, re_url, oc_url):
+    def insert_isa(self, re_url, oc_url, username):
         print("insert isa")
-        sql = "INSERT INTO isa (isa_oc_url, isa_re_url) VALUES (%s, %s)"
-        vals = (oc_url, re_url)
+        sql = "INSERT INTO isa (isa_oc_url, isa_re_url, isa_username) VALUES (%s, %s, %s)"
+        vals = (oc_url, re_url, username)
 
         self.dbCursor.execute(sql, vals)
 
@@ -48,5 +48,14 @@ class TwitterInfluence(object):
         vals = (url, username)
 
         self.dbCursor.execute(sql, vals)
+
+        self.dbConn.commit()
+
+    def insert_repost(self, url):
+        print ("insert repost")
+        sql = "INSERT INTO repost (repost_re_url) VALUES (%s)"
+        val = url
+
+        self.dbCursor.execute(sql, val)
 
         self.dbConn.commit()

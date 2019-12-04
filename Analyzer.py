@@ -5,6 +5,9 @@ from TwitterInfluence import *
 import datetime
 import urllib
 import re
+import twarc
+
+# Links: https://twitter.com/briannafrank10/status/1145125054524612608
 
 def Analyze(url):
     consumer_key='TEQxvBQ2BVUAt0OnoAMIA0yWh'
@@ -61,7 +64,7 @@ def Analyze(url):
     for t in tw.Cursor(api.search, q='to:'+scr, result_type='recent', timeout=999999).items(1000):
         if hasattr(t, 'in_reply_to_status_id_str'):
             if (t.in_reply_to_status_id_str == url):
-                print("Here")
+                # print("Here")
                 replies.append(t)
 
     print("Num replies: " + str(len(replies)))
@@ -83,7 +86,7 @@ def Analyze(url):
     numReplies = 0
     for t in tw.Cursor(api.search, q='to:'+scr, result_type='recent', timeout=999999).items(1000):
         if hasattr(t, 'in_reply_to_status_id_str'):
-            print("Lifetime replies")
+            # print("Lifetime replies")
             if (t.in_reply_to_status_id_str == url):
                 numReplies += 1
 
@@ -97,20 +100,20 @@ def Analyze(url):
 
     ti.insert_user(str(tweet.user.screen_name), str(tweet.user.name))
     ti.insert_tweet(url, tweet.created_at, tweet.favorite_count, tweet.user.location, tweet.user.screen_name, num)
-    ti.insert_posts(tweet.user.screen_name, str(url))
+    ti.insert_posts(tweet.user.screen_name, str(url), str(tweet.user.name))
 
     # Insert reply tweets to post table
 
     for usr in replies:
-        print("posts for loop")
+        # print("posts for loop")
         post_url = usr.id_str.split('/')[-1]
-        ti.insert_user( api.get_user(usr.user.id_str).screen_name, usr.user.name)
-        ti.insert_posts(api.get_user(usr.user.id_str).screen_name, str(post_url))
+        ti.insert_user(api.get_user(usr.user.id_str).screen_name, usr.user.name)
+        ti.insert_posts(api.get_user(usr.user.id_str).screen_name, str(post_url), usr.user.name)
 
     # Insert retweeters into retweet table
     retweeters_list = api.retweeters(url)
     for usr in retweeters_list:
-        print("retweeters loop")
+        # print("retweeters loop")
         print(api.get_user(usr).screen_name)
         nm = api.get_user(usr).screen_name
         ti.insert_user(api.get_user(usr).screen_name, api.get_user(usr).user.name)

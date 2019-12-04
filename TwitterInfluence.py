@@ -8,9 +8,9 @@ class TwitterInfluence(object):
         self.dbCursor.execute('use twitterinfluence')
 
     def insert_user(self, username, name):
-        print("insert user")
+        # print("insert user")
         sql_select = "SELECT * FROM user WHERE username = %s"
-        self.dbCursor.execute(sql_select, str(username))
+        self.dbCursor.execute(str(sql_select), (str(username),))
         record = self.dbCursor.fetchall()
 
         if len(record) == 0:
@@ -21,9 +21,9 @@ class TwitterInfluence(object):
             self.dbConn.commit()
 
     def insert_tweet( self, url, date, likes, location, username, replies):
-        print("insert tweet")
+        # print("insert tweet")
         sql_select = "SELECT * FROM tweet WHERE oc_url = %s"
-        self.dbCursor.execute(sql_select, url)
+        self.dbCursor.execute(sql_select, (url,))
         record = self.dbCursor.fetchall()
 
         if len(record) == 0:
@@ -36,9 +36,9 @@ class TwitterInfluence(object):
             self.dbConn.commit()
 
     def insert_retweet(self, url, date, likes, location, username, replies):
-        print("insert retweet")
+        # print("insert retweet")
         sql_select = "SELECT * FROM retweet WHERE re_url = %s"
-        self.dbCursor.execute(sql_select, str(url))
+        self.dbCursor.execute(sql_select, (str(url),))
         record = self.dbCursor.fetchall()
 
         if len(record) == 0:
@@ -50,9 +50,9 @@ class TwitterInfluence(object):
             self.dbConn.commit()
 
     def insert_isa(self, re_url, oc_url, username):
-        print("insert isa")
+        # print("insert isa")
         sql_select = "SELECT * FROM isa WHERE isa_oc_url = %s AND isa_username = %s"
-        vals = (str(oc_url), str(username))
+        vals = (str(oc_url), (str(username),))
         self.dbCursor.execute(sql_select, vals)
         record = self.dbCursor.fetchall()
 
@@ -64,26 +64,32 @@ class TwitterInfluence(object):
 
             self.dbConn.commit()
 
-    def insert_posts(self, username, url):
-        print("insert posts")
+    def insert_posts(self, username, url, name):
+        # print("insert posts")
         sql_select = "SELECT * FROM posts WHERE posts_oc_url = %s AND posts_username = %s"
-        vals = (str(url), str(username))
+        vals = (str(url), str(username),)
         self.dbCursor.execute(sql_select, vals)
         record = self.dbCursor.fetchall()
 
         if len(record)==0:
+            sql_select = "SELECT * FROM user WHERE username = %s"
+            self.dbCursor.execute(sql_select, (username,))
+            record = self.dbCursor.fetchall()
+
+            if len(record)==0:
+                self.insert_user(username, name)
             sql = "INSERT INTO posts (posts_oc_url, posts_username) VALUES (%s, %s)"
-            vals = (str(url), str(username))
+            vals = (str(url), str(username),)
 
             self.dbCursor.execute(sql, vals)
 
         self.dbConn.commit()
 
     def insert_repost(self, url):
-        print ("insert repost")
+        # print ("insert repost")
         sql_select = "SELECT * FROM posts WHERE posts_oc_url = %s AND posts_username = %s"
 
-        self.dbCursor.execute(sql_select, str(url))
+        self.dbCursor.execute(sql_select, (str(url),))
         record = self.dbCursor.fetchall()
 
         if len(record) == 0:

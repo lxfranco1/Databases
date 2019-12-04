@@ -1,4 +1,5 @@
 import os
+import twitter
 import tweepy as tw
 from TwitterInfluence import *
 import datetime
@@ -86,8 +87,6 @@ def Analyze(url):
             if (t.in_reply_to_status_id_str == url):
                 numReplies += 1
 
-
-
     print("Lifetime likes: " + str(numLikes))
     print("Lifetime retweets: " + str(numRetweets))
     print("Lifetime comments: " + str(numReplies))
@@ -101,20 +100,22 @@ def Analyze(url):
     ti.insert_posts(tweet.user.screen_name, str(url))
 
     # Insert reply tweets to post table
+
     for usr in replies:
         print("posts for loop")
         post_url = usr.id_str.split('/')[-1]
-        print (api.get_user(usr.user.id_str))
-        ti.insert_user(api.get_user(usr.user.id_str), usr.user.name)
-        ti.insert_posts(usr.user.id_str, str(post_url))
+        ti.insert_user( api.get_user(usr.user.id_str).screen_name, usr.user.name)
+        ti.insert_posts(api.get_user(usr.user.id_str).screen_name, str(post_url))
 
     # Insert retweeters into retweet table
     retweeters_list = api.retweeters(url)
     for usr in retweeters_list:
         print("retweeters loop")
-        ti.insert_user(api.get_user(usr), api.get_user(usr).user.name)
-        ti.insert_retweet(url, tweet.created_at, tweet.favorite_count, tweet.user.location, usr.user.id_str, len(replies))
+        print(api.get_user(usr).screen_name)
+        nm = api.get_user(usr).screen_name
+        ti.insert_user(api.get_user(usr).screen_name, api.get_user(usr).user.name)
+        ti.insert_retweet(url, tweet.created_at, tweet.favorite_count, tweet.user.location, nm, len(replies))
         ti.insert_repost(url)
-        ti.insert_isa(url, url, usr.user.id_str)
+        ti.insert_isa(url, url, nm)
 
     print("end")

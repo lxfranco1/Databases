@@ -56,6 +56,8 @@ def Analyze(url):
 
     scr= str(tweet.user.screen_name)
     # get number of likes retweets and replies
+
+    # Get the replies to the tweet
     replies = []
     for t in tw.Cursor(api.search, q='to:'+scr, result_type='recent', timeout=999999).items(1000):
         if hasattr(t, 'in_reply_to_status_id_str'):
@@ -70,17 +72,19 @@ def Analyze(url):
 
     # Amount of likes for all of user's tweets
     numRetweets=0
-    for i in tweet.GetUserTimeline(tweet.user.screen_name):
+    for i in api.user_timeline(screen_name=tweet.user.screen_name):
         numRetweets += i.retweet_count
 
     # Amount of likes for all of user's tweets
     numLikes=0
-    for i in tweet.GetUserTimeline(tweet.user.screen_name):
+    for i in api.user_timeline(screen_name=tweet.user.screen_name):
         numLikes += i.favorite_count
 
+    # Total number of replies for user
     numReplies = 0
     for t in tw.Cursor(api.search, q='to:'+scr, result_type='recent', timeout=999999).items(1000):
         if hasattr(t, 'in_reply_to_status_id_str'):
+            print("Lifetime replies")
             if (t.in_reply_to_status_id_str == url):
                 numReplies += 1
 
@@ -91,7 +95,6 @@ def Analyze(url):
     print("Lifetime comments: " + str(numReplies))
 
     num = len(replies)
-    #print(replies[0].user.screen_name)
 
     ti = TwitterInfluence()
 
@@ -99,16 +102,21 @@ def Analyze(url):
     ti.insert_tweet(url, tweet.created_at, tweet.favorite_count, tweet.user.location, tweet.user.screen_name, num)
     ti.insert_posts(tweet.user.screen_name, str(url))
 
+    # Insert reply tweets to post table
     for usr in replies:
-        ti.insert_retweet(str(url), tweet.created_at, tweet.favorite_count, tweet.user.location, usr.user.screen_name)
+        print("posts for loop")
+        post_url = usr.id_str.split('/')[-1]
+        print (api.get_user(usr.user.id_str))
+        ti.insert_user(api.get_user(usr.user.id_str), usr.user.name)
+        ti.insert_posts(usr.user.id_str, str(post_url))
 
-    # Problem with isa table
-        #!!!!! All retweets have same tweet id
+    # Insert retweeters into retweet table
+    retweeters_list = api.retweeters(url)
+    for usr in retweeters_list:
+        print("retweeters loop")
+        ti.insert_user(api.get_user(usr), api.get_user(usr).user.name)
+        ti.insert_retweet(url, tweet.created_at, tweet.favorite_count, tweet.user.location, usr.user.id_str, len(replies))
+        ti.insert_repost(url)
+        ti.insert_isa(url, url, usr.user.id_str)
 
-
-
-
-#retweeters_list = api.retweeters(url))
-
-#for id in api.retweeters(url):
-#    print (api.get_user(id).screen_name)
+    print("end")

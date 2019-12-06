@@ -101,11 +101,12 @@ class TwitterInfluence(object):
             self.dbConn.commit()
 
     def did_user_reply(self, url, username):
-        print("advanced query")
+      #  print("advanced query")
         sql_select = "SELECT posts.posts_username FROM posts, tweet " \
                      "WHERE tweet.url = %s AND tweet.url = posts.oc_url AND posts.posts_username = %s"
         vals = (str(url), str(username),)
         self.dbCursor.execute(sql_select, vals)
+        
         record = self.dbCursor.fetchall()
 
         if len(record) != 0:

@@ -8,6 +8,7 @@ import re
 import twarc
 
 # Links: https://twitter.com/briannafrank10/status/1145125054524612608
+# Links: https://twitter.com/Nataajah_I/status/1201967123008040973
 
 def Analyze(url):
     consumer_key='TEQxvBQ2BVUAt0OnoAMIA0yWh'

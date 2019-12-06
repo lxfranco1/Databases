@@ -5,7 +5,6 @@ from TwitterInfluence import *
 import datetime
 import urllib
 import re
-import twarc
 
 # Links: https://twitter.com/briannafrank10/status/1145125054524612608
 # Links: https://twitter.com/Nataajah_I/status/1201967123008040973
@@ -121,5 +120,10 @@ def Analyze(url):
         ti.insert_retweet(url, tweet.created_at, tweet.favorite_count, tweet.user.location, nm, len(replies))
         ti.insert_repost(url)
         ti.insert_isa(url, url, nm)
+
+    print("Did a specific user reply to this tweet?")
+    tw_username = input("Enter specific twitter username: ")
+
+    ti.did_user_reply(url, tw_username)
 
     print("end")

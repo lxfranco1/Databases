@@ -9,6 +9,7 @@ class TwitterInfluence(object):
 
     def insert_user(self, username, name):
         # print("insert user")
+          # Query for existing entry
         sql_select = "SELECT * FROM user WHERE username = %s"
         self.dbCursor.execute(str(sql_select), (str(username),))
         record = self.dbCursor.fetchall()
@@ -22,6 +23,7 @@ class TwitterInfluence(object):
 
     def insert_tweet( self, url, date, likes, location, username, replies):
         # print("insert tweet")
+          # Query for existing entry
         sql_select = "SELECT * FROM tweet WHERE oc_url = %s"
         self.dbCursor.execute(sql_select, (url,))
         record = self.dbCursor.fetchall()
@@ -37,6 +39,7 @@ class TwitterInfluence(object):
 
     def insert_retweet(self, url, date, likes, location, username, replies):
         # print("insert retweet")
+          # Query for existing entry
         sql_select = "SELECT * FROM retweet WHERE re_url = %s"
         self.dbCursor.execute(sql_select, (str(url),))
         record = self.dbCursor.fetchall()
@@ -51,6 +54,7 @@ class TwitterInfluence(object):
 
     def insert_isa(self, re_url, oc_url, username):
         # print("insert isa")
+          # Query for existing entry
         sql_select = "SELECT * FROM isa WHERE isa_oc_url = %s AND isa_username = %s"
         vals = (str(oc_url), (str(username),))
         self.dbCursor.execute(sql_select, vals)
@@ -66,6 +70,7 @@ class TwitterInfluence(object):
 
     def insert_posts(self, username, url, name):
         # print("insert posts")
+          # Query for existing entry
         sql_select = "SELECT * FROM posts WHERE posts_oc_url = %s AND posts_username = %s"
         vals = (str(url), str(username),)
         self.dbCursor.execute(sql_select, vals)
@@ -87,6 +92,7 @@ class TwitterInfluence(object):
 
     def insert_repost(self, url):
         # print ("insert repost")
+        # Query for existing entry
         sql_select = "SELECT * FROM posts WHERE posts_oc_url = %s AND posts_username = %s"
 
         self.dbCursor.execute(sql_select, (str(url),))
@@ -101,14 +107,18 @@ class TwitterInfluence(object):
             self.dbConn.commit()
 
     def did_user_reply(self, url, username):
-      #  print("advanced query")
-        sql_select = "SELECT posts.posts_username FROM posts, tweet " \
-                     "WHERE tweet.url = %s AND tweet.url = posts.oc_url AND posts.posts_username = %s"
-        vals = (str(url), str(username),)
+        # print("advanced query")
+        # Query to check if a specific user replied to a tweet 
+        # Gets the answer from the intersection from the two tables
+        # Tweet will contain the url of the original tweet so you have to intersect the two tables
+        # Posts table has the url of the reply
+        sql_select = "SELECT posts_username FROM posts WHERE posts_username = %s INTERSECT " \
+                     "SELECT oc_username WHERE tweet.url = %s"
+        vals = (str(username), str(url),)
         self.dbCursor.execute(sql_select, vals)
-        
         record = self.dbCursor.fetchall()
-
+        
+        # If the record is not empty then the user replied to the tweet
         if len(record) != 0:
             print "yes"
 
